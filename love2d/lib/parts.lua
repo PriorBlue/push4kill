@@ -25,21 +25,22 @@ function CreatePart(world, x, y, path)
 	obj.img = GetImage(path or "default")
 	obj.data = GetData(path or "default")
 
-	obj.body = love.physics.newBody(world, x, y)
+	obj.body = love.physics.newBody(world, obj.x, obj.y, "kinematic")
 
 	for k, v in pairs(obj.data) do
 		local shape = love.physics.newRectangleShape(v[2] + v[4] * 0.5, v[3] + v[5] * 0.5, v[4], v[5])
 		local fixture = love.physics.newFixture(obj.body, shape)
 	end
 
-	obj.draw = function(self, x, y)
+	obj.draw = function(self)
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.draw(self.img, self.x + x, self.y + y)
+
+		love.graphics.draw(self.img, self.x, self.y)
 		
-		love.graphics.setColor(255, 0, 255, 63)
-		for k, v in pairs(self.body:getFixtureList()) do
-			love.graphics.polygon("fill", self.body:getWorldPoints(v:getShape():getPoints()))
-		end
+		--love.graphics.setColor(255, 0, 255, 63)
+		--for k, v in pairs(self.body:getFixtureList()) do
+			--love.graphics.polygon("fill", self.body:getWorldPoints(v:getShape():getPoints()))
+		--end
 	end
 
 	return obj
