@@ -11,7 +11,7 @@ end
 
 function GetData(path)
 	if not partsData[path] then
-		partsData[path] = dofile("data/" .. path .. ".lua")
+		partsData[path] = dofile("data/" .. path .. ".png.lua")
 	end
 
 	return partsData[path]
@@ -28,13 +28,15 @@ function CreatePart(world, x, y, path)
 	obj.body = love.physics.newBody(world, x, y)
 
 	for k, v in pairs(obj.data) do
-		local shape = love.physics.newRectangleShape(v[2] + 32 + v[4] * 0.5, v[3] + 32 + v[5] * 0.5, v[4], v[5])
+		local shape = love.physics.newRectangleShape(v[2] + v[4] * 0.5, v[3] + v[5] * 0.5, v[4], v[5])
 		local fixture = love.physics.newFixture(obj.body, shape)
 	end
 
 	obj.draw = function(self, x, y)
+		love.graphics.setColor(255, 255, 255)
 		love.graphics.draw(self.img, self.x + x, self.y + y)
 		
+		love.graphics.setColor(255, 0, 255, 63)
 		for k, v in pairs(self.body:getFixtureList()) do
 			love.graphics.polygon("fill", self.body:getWorldPoints(v:getShape():getPoints()))
 		end

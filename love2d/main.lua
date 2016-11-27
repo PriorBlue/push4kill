@@ -7,9 +7,9 @@ function love.load()
 	world = love.physics.newWorld(0, 9.81 * 64, true)
 	world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 	
-	level = CreateLevel(world, -128, -128, 6, 4)
+	level = CreateLevel(world, 0, 0, 6, 4, 256)
 	
-	player1 = CreatePlayer(world, 128, 16, 8)
+	player1 = CreatePlayer(world, 128, 128, 8)
 end
 
 function love.update(dt)
@@ -24,7 +24,12 @@ function love.draw()
 end
 
 function love.keypressed(key)
-
+	if key == "space" then
+		if player1.canJump >= 1 then
+			player1.canJump = player1.canJump - 1
+			player1:jump()
+		end
+	end
 end
 
 function love.keyreleased(key)
@@ -40,7 +45,17 @@ function love.mousemoved(x, y, dx, dy)
 end
 
 function beginContact(a, b, coll)
-	print(a)
+	local data1 = a:getUserData()
+	
+	if data1 then
+		data1.canJump = 2
+	end
+	
+	local data2 = b:getUserData()
+
+	if data2 then
+		data2.canJump = 2
+	end
 end
  
 function endContact(a, b, coll)
