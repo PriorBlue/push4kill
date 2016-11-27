@@ -11,9 +11,10 @@ function CreateBullet(world, player, dx, dy, parent)
 	obj.body = love.physics.newBody(world, obj.x, obj.y, "dynamic")
 	obj.shape = love.physics.newCircleShape(4)
 	obj.fixture = love.physics.newFixture(obj.body, obj.shape)
+	obj.fixture:setSensor(true)
 	obj.fixture:setUserData(obj)
 	
-	obj.body:setLinearVelocity(100, 0)
+	obj.body:setLinearVelocity(dx, dy)
 	
 	obj.draw = function(self)
 		love.graphics.setColor(255, 127, 0, 255)

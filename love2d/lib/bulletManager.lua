@@ -1,11 +1,12 @@
-function CreateBulletManager(world)
+function CreateBulletManager(world, speed)
 	local obj = {}
 	
 	obj.world = world
 	obj.bullets = {}
+	obj.speed = speed
 
-	obj.newBullet = function(self, player, dx, dy)
-		local bullet = CreateBullet(self.world, player, dx, dy, self)
+	obj.newBullet = function(self, player, angle)
+		local bullet = CreateBullet(self.world, player, math.sin(angle) * self.speed, math.cos(angle) * self.speed, self)
 		
 		table.insert(obj.bullets, bullet)
 	end

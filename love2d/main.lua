@@ -6,6 +6,8 @@ require("lib/bulletManager")
 require("lib/bullet")
 
 function love.load()
+	love.graphics.setDefaultFilter("nearest", "nearest", 0)
+
 	world = love.physics.newWorld(0, 9.81 * 64, true)
 	world:setCallbacks(beginContact, endContact, preSolve, postSolve)
 	
@@ -16,8 +18,9 @@ function love.load()
 	
 	joystickX = 0
 	
-	bulletManager = CreateBulletManager(world)
-	bulletManager:newBullet(player1, 1, 0, player1)
+	bulletManager = CreateBulletManager(world, 1500)
+	
+	backImg = love.graphics.newImage("gfx/back.jpg")
 end
 
 function love.update(dt)
@@ -44,6 +47,8 @@ function love.update(dt)
 end
 
 function love.draw()
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(backImg)
 	level:draw()
 	
 	player1:draw()
@@ -73,7 +78,9 @@ function love.keyreleased(key)
 end
 
 function love.mousepressed(x, y, button)
-
+	if button == 1 then
+		bulletManager:newBullet(player1, math.atan2(x - player1.body:getX(), y - player1.body:getY()))
+	end
 end
 
 function love.mousemoved(x, y, dx, dy)
@@ -91,7 +98,14 @@ function beginContact(a, b, coll)
 			end
 			
 			if data[i].type == "bullet" then
-				if data[3 - i] and data[3 - i].type == "player" and data[i].source ~= data[3 - i] then
+				if data[3 - i] then
+					if data[3 - i].type == "player" then
+						if data[i].source ~= data[3 - i] then
+							data[3 - i].health = data[3 - i].health - 1
+							data[i]:destroy()
+						end
+					end
+				else
 					data[i]:destroy()
 				end
 			end
