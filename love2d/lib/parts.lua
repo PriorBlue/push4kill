@@ -11,7 +11,7 @@ end
 
 function GetData(path)
 	if not partsData[path] then
-		partsData[path] = dofile("data/" .. path .. ".png.lua")
+		partsData[path] = dofile(arg[1] .. "\\data\\" .. path .. ".png.lua")
 	end
 
 	return partsData[path]

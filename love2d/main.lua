@@ -61,7 +61,7 @@ function love.draw()
 	love.postshader.setBuffer("back")
 	
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.draw(backImg)
+	love.graphics.draw(backImg, 0, 0, 0, love.graphics.getWidth() / backImg:getWidth(), love.graphics.getHeight() / backImg:getHeight())
 	level:draw()
 	
 	player1:draw()
@@ -89,6 +89,10 @@ function love.keypressed(key)
 		level:moveX(math.floor(player1.body:getY() / 256) + 2, -1)
 	elseif key == "right" then
 		level:moveX(math.floor(player1.body:getY() / 256) + 2, 1)
+	end
+	
+	if key == "escape" then
+		love.event.quit()
 	end
 end
 

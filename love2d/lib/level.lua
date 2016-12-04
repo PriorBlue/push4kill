@@ -4,7 +4,7 @@ function CreateLevel(world, x, y, path, size)
 	obj.x = x - size or 0
 	obj.y = y - size or 0
 	
-	obj.data = dofile("data/" .. path .. ".lua")
+	obj.data = dofile(arg[1] .. "\\data\\" .. path .. ".lua")
 	
 	obj.width = #obj.data[1]
 	obj.height = #obj.data
