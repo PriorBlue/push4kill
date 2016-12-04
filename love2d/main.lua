@@ -16,11 +16,15 @@ function love.load()
 	player1 = CreatePlayer(world, 128, 128, 8)
 	player2 = CreatePlayer(world, 512, 128, 8)
 	
-	joystickX = 0
+	joystickLeftX = 0
+	joystickRightX = 0
+	joystickRightY = 0
 	
 	bulletManager = CreateBulletManager(world, 1500)
 	
 	backImg = love.graphics.newImage("gfx/back.jpg")
+	
+	timer = 0
 end
 
 function love.update(dt)
@@ -32,11 +36,11 @@ function love.update(dt)
 		player1:moveRight()
 	end
 
-	if joystickX > 0.5 then
+	if joystickLeftX > 0.5 then
 		player2:moveLeft()
 	end
 
-	if joystickX < -0.5 then
+	if joystickLeftX < -0.5 then
 		player2:moveRight()
 	end
 
@@ -44,9 +48,18 @@ function love.update(dt)
 	player2:update(dt)
 	level:update(dt)
 	world:update(dt)
+	
+	timer = timer + dt
+	
+	if timer > 0.1 then
+		timer = 0
+		bulletManager:newBullet(player2, player2.angle)
+	end
 end
 
 function love.draw()
+	love.postshader.setBuffer("back")
+	
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.draw(backImg)
 	level:draw()
@@ -55,6 +68,12 @@ function love.draw()
 	player2:draw()
 	
 	bulletManager:draw()
+	
+	love.postshader.addEffect("scanlines")
+
+	love.postshader.setBuffer("render")
+
+	love.postshader.draw()
 end
 
 function love.keypressed(key)
@@ -79,12 +98,12 @@ end
 
 function love.mousepressed(x, y, button)
 	if button == 1 then
-		bulletManager:newBullet(player1, math.atan2(x - player1.body:getX(), y - player1.body:getY()))
+		bulletManager:newBullet(player1, player1.angle)
 	end
 end
 
 function love.mousemoved(x, y, dx, dy)
-
+	player1.angle = math.atan2(x - player1.body:getX(), y - player1.body:getY())
 end
 
 function beginContact(a, b, coll)
@@ -126,8 +145,12 @@ function postSolve(a, b, coll, normalimpulse, tangentimpulse)
 end
 
 function love.gamepadpressed(joystick, button)
-	if button == "a" then
+	if button == "leftshoulder" then
 		player2:jump()
+	end
+
+	if button == "x" then
+		
 	end
 	
 	if button == "dpup" then
@@ -139,11 +162,20 @@ function love.gamepadpressed(joystick, button)
 	elseif button == "dpright" then
 		level:moveX(math.floor(player2.body:getY() / 256) + 2, 1)
 	end
-	print(joystick,button)
 end
 
 function love.gamepadaxis(joystick, axis, value)
 	if axis == "leftx" then
-		joystickX = value
+		joystickLeftX = value
+	end
+
+	if axis == "rightx" then
+		joystickRightX = value
+		player2.angle = math.atan2(joystickRightX, joystickRightY)
+	end
+	
+	if axis == "righty" then
+		joystickRightY = value
+		player2.angle = math.atan2(joystickRightX, joystickRightY)
 	end
 end

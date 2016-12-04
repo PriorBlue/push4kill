@@ -1,5 +1,6 @@
 playerImg = love.graphics.newImage("gfx/player_anim.png")
 playerHead = love.graphics.newImage("gfx/player_head.png")
+playerWeapon = love.graphics.newImage("gfx/player_weapon.png")
 playerQuad = love.graphics.newQuad(0, 0, 20, 29, playerImg:getWidth(), playerImg:getHeight())
 playerHeadQuad = love.graphics.newQuad(0, 0, 58, 48, playerHead:getWidth(), playerHead:getHeight())
 
@@ -28,6 +29,7 @@ function CreatePlayer(world, x, y, radius)
 	obj.direction = 1
 	obj.animDirection = 1
 	obj.anim = 0
+	obj.angle = 0
 
 	obj.body = love.physics.newBody(world, x, y, "dynamic")
 	obj.body:setFixedRotation(true)
@@ -76,6 +78,7 @@ function CreatePlayer(world, x, y, radius)
 		love.graphics.draw(self.img, obj.quad, obj.body:getX(), obj.body:getY(), 0, obj.animDirection, 1, 11, 20)
 		self.quad2:setViewport(0, math.floor(obj.frame2 % obj.frameMax2) * 48, 58, 48)
 		love.graphics.draw(self.img2, obj.quad2, obj.body:getX(), obj.body:getY(), 0, obj.direction, 1, 28, 58)
+		love.graphics.draw(playerWeapon, obj.body:getX(), obj.body:getY() - 12, -obj.angle - math.pi * 1.5, 1, 1, 8, 10)
 		love.graphics.print(self.health, obj.body:getX(), obj.body:getY() - 64)
 	end
 	

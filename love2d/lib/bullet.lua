@@ -6,7 +6,7 @@ function CreateBullet(world, player, dx, dy, parent)
 	obj.source = player
 
 	obj.x = player.body:getX()
-	obj.y = player.body:getY()
+	obj.y = player.body:getY() - 12
 
 	obj.body = love.physics.newBody(world, obj.x, obj.y, "dynamic")
 	obj.shape = love.physics.newCircleShape(4)
